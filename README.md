@@ -136,7 +136,7 @@ At some point, events will be investigated, hopefully with the result that they 
 
 At this moment, Jest Chrome faker has partial implementations of Storage, Tabs and History:
 
-- [likelylogic/jest-chrome-faker/tree/master/src/api](https://github.com/likelylogic/jest-chrome-faker/tree/master/src/api)
+- [likelylogic/jest-chrome-faker/tree/master/src/api](src/api)
 
 The rest of the APIs have been prioritised as follows:
 
@@ -149,11 +149,12 @@ The plan is to work on completing the high priority items first, then reviewing 
 
 If you think you can help with further implementations:
 
-- check the [issues](issues/) to see what needs to be done
-- review existing [source code](src/api/) (including utilities)
+- check the [issues](https://github.com/likelylogic/jest-chrome-faker/issues) to see what needs to be done
+- review existing [source code](src) (including utilities)
 - open a ticket, or comment on an existing ticket, and discuss
 - if appropriate, write your implementation
 - add [tests](tests) for each faked entity
 - submit a PR
 
 Thanks.
+
