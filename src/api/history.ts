@@ -33,9 +33,7 @@ function getTitle(url: string) {
   return matches ? matches.join(' ') : text
 }
 
-// factory
-export function mockHistory(data: Visit[] = []) {
-
+function makeDatabase(data: Visit[] = []) {
   // items and visits
   const historyItems: HistoryItem[] = []
   const visitItems: VisitItem[] = []
@@ -74,19 +72,31 @@ export function mockHistory(data: Visit[] = []) {
     historyItem.visitCount!++
   })
 
+  return {
+    historyItems,
+    visitItems,
+  }
+}
+
+// factory
+export function mockHistory(data: Visit[] = []) {
+
+  // database
+  const db = makeDatabase(data)
+
   // mock
   const mocked: any = {
     getVisits(details: { url: string }, callback ?: Callback) {
-      const historyItem = historyItems.find(item => item.url === details.url)
+      const historyItem = db.historyItems.find(item => item.url === details.url)
       const items = historyItem
-        ? visitItems.filter(visit => visit.id === historyItem.id)
+        ? db.visitItems.filter(visit => visit.id === historyItem.id)
         : []
       return resolve(callback, items)
     },
 
     search(info: HistoryQuery, callback ?: Callback) {
       // items
-      let items: HistoryItem[] = historyItems
+      let items: HistoryItem[] = db.historyItems
 
       // free-text query
       if (isDefined(info.text)) {
