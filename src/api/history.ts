@@ -79,7 +79,7 @@ function makeDatabase(data: Visit[] = []) {
 }
 
 // factory
-export function mockHistory(data: Visit[] = []) {
+export function fakeHistory(data: Visit[] = []) {
 
   // database
   const db = makeDatabase(data)

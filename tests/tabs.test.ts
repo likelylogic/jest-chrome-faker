@@ -1,5 +1,5 @@
 import { chrome } from 'jest-chrome'
-import { mockTabs } from '../src'
+import { fakeTabs } from '../src'
 
 describe('tabs', function() {
 
@@ -12,7 +12,7 @@ describe('tabs', function() {
   ]
 
   beforeAll(async function() {
-    reset = mockTabs(data)
+    reset = fakeTabs(data)
   })
 
   it('should get tabs', function() {

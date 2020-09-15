@@ -6,7 +6,7 @@ import QueryInfo = chrome.tabs.QueryInfo
 // allow users to pass in partial test data
 type TabStub = Partial<chrome.tabs.Tab>
 
-export function mockTabs(data: TabStub[] = []) {
+export function fakeTabs(data: TabStub[] = []) {
 
   const mocked: any = {
     get(id: number, callback ?: Callback) {

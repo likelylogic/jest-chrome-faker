@@ -4,7 +4,7 @@ import { resolve, mock } from '@utils/chrome'
 
 type StorageAreaType = 'local' | 'managed' | 'sync'
 
-export function mockStorage(type: StorageAreaType = 'local', data: Hash = {}) {
+export function fakeStorage(type: StorageAreaType = 'local', data: Hash = {}) {
 
   const mocked: any = {
     get(key: string | string[] | Hash | null, callback?: Callback): Hash {

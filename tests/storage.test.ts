@@ -1,5 +1,5 @@
 import { chrome } from 'jest-chrome'
-import { mockStorage } from '../src'
+import { fakeStorage } from '../src'
 
 describe('storage', function() {
 
@@ -8,7 +8,7 @@ describe('storage', function() {
   const data = { foo: 1 }
 
   beforeAll(async function() {
-    reset = mockStorage('local', data)
+    reset = fakeStorage('local', data)
   })
 
   it('should set data', function() {

@@ -1,5 +1,5 @@
 {
-  "name": "jest-chrome-fake",
+  "name": "jest-chrome-faker",
   "version": "0.1.0",
   "description": "Working implementations of Chrome Extension API for use with Jest. Builds on extend-chrome/jest-chrome",
   "keywords": [
@@ -51,7 +51,7 @@
     "copyfiles": "^2.3.0",
     "eslint": "^7.1.0",
     "eslint-plugin-jest": "^23.13.2",
-    "jest": "^26.0.1",
+    "jest": "^26.4.2",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.5",
     "rollup": "^2.11.2",
@@ -62,5 +62,8 @@
   "peerDependencies": {
     "jest-chrome": "^0.7.0",
     "jest": "^24.9.0"
+  },
+  "dependencies": {
+    "jest-chrome": "^0.7.0"
   }
 }

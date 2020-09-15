@@ -1,5 +1,5 @@
 import { chrome } from 'jest-chrome'
-import { mockHistory } from '../src'
+import { fakeHistory } from '../src'
 
 function partial (obj: Hash) {
   return expect.objectContaining(obj)
@@ -19,7 +19,7 @@ describe('history', function() {
   ]
 
   beforeAll(async function() {
-    reset = mockHistory(data)
+    reset = fakeHistory(data)
   })
 
   it('should get all visits for a single URL', function() {
