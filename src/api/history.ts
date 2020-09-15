@@ -109,7 +109,7 @@ export function mockHistory(data: Visit[] = []) {
       }
 
       // maximum number of results
-      // items = items.slice(0, Math.max(info.maxResults || 0, 100))
+      items = items.slice(0, Math.max(info.maxResults || 0, 100))
 
       // resolve
       resolve(callback, items)
