@@ -1,7 +1,6 @@
 import { chrome } from 'jest-chrome'
 import { isDefined } from '@utils/helpers'
-import { getId, resolve, mock } from '@utils/chrome'
-
+import { getId, getTime, getTitle, mock, resolve } from '@utils/chrome'
 import HistoryQuery = chrome.history.HistoryQuery
 import HistoryItem = chrome.history.HistoryItem
 import VisitItem = chrome.history.VisitItem
@@ -21,16 +20,6 @@ type Visit = {
   referringVisitId?: string
   /// The transition type for this visit from its referrer
   transition?: string
-}
-
-function getTime(index: number) {
-  return index * 1000
-}
-
-function getTitle(url: string) {
-  const text = url.replace(/^(https?:\/\/)?(www\.)?/, '')
-  const matches = text.match(/\w+/g)
-  return matches ? matches.join(' ') : text
 }
 
 function makeDatabase(data: Visit[] = []) {

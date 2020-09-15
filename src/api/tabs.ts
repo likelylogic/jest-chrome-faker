@@ -1,13 +1,22 @@
 import { chrome } from 'jest-chrome'
-import { resolve, mock } from '@utils/chrome'
+import { getId, getTitle, resolve, mock } from '@utils/chrome'
 
 import QueryInfo = chrome.tabs.QueryInfo
 
 // allow users to pass in partial test data
 type TabStub = Partial<chrome.tabs.Tab>
 
+function makeTab (data: TabStub) {
+  data.id = getId(data.id) as number
+  data.title = data.title || getTitle(data.url)
+}
+
 export function fakeTabs(data: TabStub[] = []) {
 
+  // database
+  data.forEach(makeTab)
+
+  // mocked
   const mocked: any = {
     get(id: number, callback ?: Callback) {
       const tab: TabStub | undefined = data.find(tab => tab.id === id)
