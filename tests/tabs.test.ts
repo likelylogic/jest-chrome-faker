@@ -3,8 +3,8 @@ import { mockTabs } from '../src'
 
 describe('tabs', function() {
 
+  let reset: () => any
   const tabs = chrome.tabs
-  let restore: () => any
   const data = [
     { id: 1, url: 'http://linkedin.com', title: 'Linked In' },
     { id: 2, url: 'http://google.com', title: 'Google' },
@@ -12,7 +12,7 @@ describe('tabs', function() {
   ]
 
   beforeAll(async function() {
-    restore = mockTabs(data)
+    reset = mockTabs(data)
   })
 
   it('should get tabs', function() {
@@ -25,7 +25,7 @@ describe('tabs', function() {
     const target = data[1]
     tabs.query({ url: target.url }, (tabs) => {
       expect(tabs.length).toBe(1)
-      expect(tabs[0]).toStrictEqual(target)
+      expect(tabs).toStrictEqual([target])
     })
   })
 
@@ -36,7 +36,7 @@ describe('tabs', function() {
   })
 
   afterAll(function() {
-    restore()
+    reset()
   })
 
 })

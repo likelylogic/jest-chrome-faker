@@ -3,13 +3,12 @@ import { mockStorage } from '../src'
 
 describe('storage', function() {
 
-  let storage: chrome.storage.StorageArea
-  let restore: () => any
+  let reset: () => any
+  const storage = chrome.storage.local
   const data = { foo: 1 }
 
   beforeAll(async function() {
-    restore = mockStorage('local', data)
-    storage = chrome.storage.local
+    reset = mockStorage('local', data)
   })
 
   it('should set data', function() {
@@ -33,7 +32,7 @@ describe('storage', function() {
   })
 
   it('should reset', function() {
-    restore()
+    reset()
     expect(storage.set).toHaveBeenCalledTimes(0)
     expect(storage.get).toHaveBeenCalledTimes(0)
   })

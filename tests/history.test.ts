@@ -7,8 +7,8 @@ function partial (obj: Hash) {
 
 describe('history', function() {
 
+  let reset: () => any
   const history = chrome.history
-  let restore: () => any
   const data = [
     { url: 'https://linkedin.com', title: 'Linked In' },
     { url: 'https://google.com', title: 'Google' },
@@ -19,7 +19,7 @@ describe('history', function() {
   ]
 
   beforeAll(async function() {
-    restore = mockHistory(data)
+    reset = mockHistory(data)
   })
 
   it('should get all visits for a single URL', function() {
@@ -60,7 +60,7 @@ describe('history', function() {
   })
 
   afterAll(function() {
-    restore()
+    reset()
   })
 
 })
