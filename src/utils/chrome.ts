@@ -10,3 +10,17 @@ export function resolve(callback: Callback | undefined, value?: any) {
   }
   return Promise.resolve(value)
 }
+
+export function mock (real: Hash, mock: Hash) {
+  // mock
+  Object.keys(mock).forEach(key => {
+    real[key].mockImplementation(mock[key])
+  })
+
+  // reset
+  return function () {
+    Object.keys(mock).forEach(key => {
+      real[key].mockReset()
+    })
+  }
+}

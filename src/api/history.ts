@@ -1,6 +1,7 @@
 import { chrome } from 'jest-chrome'
-import { isDefined, mock } from '@utils/helpers'
-import { getId, resolve } from '@utils/chrome'
+import { isDefined } from '@utils/helpers'
+import { getId, resolve, mock } from '@utils/chrome'
+
 import HistoryQuery = chrome.history.HistoryQuery
 import HistoryItem = chrome.history.HistoryItem
 import VisitItem = chrome.history.VisitItem
@@ -75,7 +76,7 @@ export function mockHistory(data: Visit[] = []) {
 
   // mock
   const mocked: any = {
-    getVisits(details: {  url: string }, callback ?: Callback) {
+    getVisits(details: { url: string }, callback ?: Callback) {
       const historyItem = historyItems.find(item => item.url === details.url)
       const items = historyItem
         ? visitItems.filter(visit => visit.id === historyItem.id)

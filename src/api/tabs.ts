@@ -1,10 +1,10 @@
 import { chrome } from 'jest-chrome'
-import { mock } from '@utils/helpers'
+import { resolve, mock } from '@utils/chrome'
+
+import QueryInfo = chrome.tabs.QueryInfo
 
 // allow users to pass in partial test data
 type TabStub = Partial<chrome.tabs.Tab>
-import QueryInfo = chrome.tabs.QueryInfo
-import { resolve } from '@utils/chrome'
 
 export function mockTabs(data: TabStub[] = []) {
 

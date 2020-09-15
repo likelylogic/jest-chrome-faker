@@ -1,6 +1,6 @@
 import { chrome } from 'jest-chrome'
-import { isPlainObject, mock } from '@utils/helpers'
-import { resolve } from '@utils/chrome'
+import { isPlainObject } from '@utils/helpers'
+import { resolve, mock } from '@utils/chrome'
 
 type StorageAreaType = 'local' | 'managed' | 'sync'
 
