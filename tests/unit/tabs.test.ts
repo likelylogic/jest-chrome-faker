@@ -1,8 +1,7 @@
 import { chrome } from 'jest-chrome'
-import { fakeTabs } from '../src'
+import { fakeTabs } from '@/index'
 
-describe('tabs', function() {
-
+describe('tabs', function () {
   let reset: () => any
   const tabs = chrome.tabs
   const data = [
@@ -11,17 +10,17 @@ describe('tabs', function() {
     { id: 3, url: 'http://msn.com', title: 'MSN' },
   ]
 
-  beforeAll(async function() {
+  beforeAll(async function () {
     reset = fakeTabs(data)
   })
 
-  it('should get tabs', function() {
+  it('should get tabs', function () {
     tabs.get(1, (tab) => {
       expect(tab).toEqual(data[0])
     })
   })
 
-  it('should query one tab', function() {
+  it('should query one tab', function () {
     const target = data[1]
     tabs.query({ url: target.url }, (tabs) => {
       expect(tabs.length).toBe(1)
@@ -29,14 +28,13 @@ describe('tabs', function() {
     })
   })
 
-  it('should query all tabs', function() {
+  it('should query all tabs', function () {
     tabs.query({}, (tabs) => {
       expect(tabs).toStrictEqual(data)
     })
   })
 
-  afterAll(function() {
+  afterAll(function () {
     reset()
   })
-
 })

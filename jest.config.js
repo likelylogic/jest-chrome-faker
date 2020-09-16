@@ -3,22 +3,32 @@
 const hq = require('alias-hq')
 
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'jsdom',
   globals: {
     'ts-jest': {
-      packageJson: 'package.json',
-      tsConfig: 'tsconfig.json',
+      diagnostics: false,
     },
   },
-  // setupFilesAfterEnv: ['./tests/jest.setup.ts'],
+
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',
+
   transform: {
-    '.(js|jsx)': '@sucrase/jest-plugin',
+    '^.+\\.tsx?$': 'ts-jest',
   },
-  moduleNameMapper: hq.get('jest'),
-  testPathIgnorePatterns: [
-    '<rootDir>/tests/e2e/',
-    '<rootDir>/tests/v1/',
-    '<rootDir>/node_modules/',
+
+  moduleFileExtensions: [
+    'ts',
+    'tsx',
+    'js',
+    'jsx',
+    'json',
+    'node',
   ],
+
+  coverageDirectory: 'tests/coverage',
+
+  moduleNameMapper: hq.get('jest'),
+
+  setupFilesAfterEnv: [
+    './tests/setup.js'
+  ]
 }
