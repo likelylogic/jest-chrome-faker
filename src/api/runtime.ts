@@ -1,7 +1,7 @@
 import { chrome } from 'jest-chrome'
-import { mock } from '@utils/chrome'
+import { mock } from '../utils/chrome'
 
-export function fakeRuntime() {
+export function fakeRuntime () {
   const mocked: any = {}
-  return mock(chrome.runtime, mocked)
+  return mock('runtime', mocked)
 }

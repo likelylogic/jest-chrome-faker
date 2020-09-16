@@ -1,6 +1,6 @@
 import { chrome } from 'jest-chrome'
-import { isDefined } from '@utils/helpers'
-import { getId, getTime, getTitle, mock, resolve } from '@utils/chrome'
+import { isDefined } from '../utils/helpers'
+import { getId, getTime, getTitle, mock, resolve } from '../utils/chrome'
 import HistoryQuery = chrome.history.HistoryQuery
 import HistoryItem = chrome.history.HistoryItem
 import VisitItem = chrome.history.VisitItem
@@ -22,7 +22,7 @@ type Visit = {
   transition?: string
 }
 
-function makeDatabase(data: Visit[] = []) {
+function makeDatabase (data: Visit[] = []) {
   // items and visits
   const historyItems: HistoryItem[] = []
   const visitItems: VisitItem[] = []
@@ -49,7 +49,7 @@ function makeDatabase(data: Visit[] = []) {
     // visit item
     const visitItem: VisitItem = {
       id: historyItem.id,
-      visitId: String(getId(visit.id)),
+      visitId: String(getId()),
       referringVisitId: '0',
       visitTime: getTime(index),
       transition: 'link',
@@ -68,14 +68,15 @@ function makeDatabase(data: Visit[] = []) {
 }
 
 // factory
-export function fakeHistory(data: Visit[] = []) {
-
+export function fakeHistory (data: Visit[] = []) {
   // database
   const db = makeDatabase(data)
 
   // mock
   const mocked: any = {
-    getVisits(details: { url: string }, callback ?: Callback) {
+    db,
+
+    getVisits (details: { url: string }, callback ?: Callback) {
       const historyItem = db.historyItems.find(item => item.url === details.url)
       const items = historyItem
         ? db.visitItems.filter(visit => visit.id === historyItem.id)
@@ -83,7 +84,7 @@ export function fakeHistory(data: Visit[] = []) {
       return resolve(callback, items)
     },
 
-    search(info: HistoryQuery, callback ?: Callback) {
+    search (info: HistoryQuery, callback ?: Callback) {
       // items
       let items: HistoryItem[] = db.historyItems
 
@@ -115,5 +116,5 @@ export function fakeHistory(data: Visit[] = []) {
     },
   }
 
-  return mock(chrome.history, mocked)
+  return mock('history', mocked)
 }

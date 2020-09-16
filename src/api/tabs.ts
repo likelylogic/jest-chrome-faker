@@ -1,5 +1,5 @@
 import { chrome } from 'jest-chrome'
-import { getId, getTitle, resolve, mock } from '@utils/chrome'
+import { getId, getTitle, resolve, mock } from '../utils/chrome'
 
 import QueryInfo = chrome.tabs.QueryInfo
 
@@ -11,19 +11,18 @@ function makeTab (data: TabStub) {
   data.title = data.title || getTitle(data.url)
 }
 
-export function fakeTabs(data: TabStub[] = []) {
-
+export function fakeTabs (data: TabStub[] = []) {
   // database
   data.forEach(makeTab)
 
   // mocked
   const mocked: any = {
-    get(id: number, callback ?: Callback) {
+    get (id: number, callback ?: Callback) {
       const tab: TabStub | undefined = data.find(tab => tab.id === id)
       return resolve(callback, tab)
     },
 
-    query(info: QueryInfo, callback ?: Callback) {
+    query (info: QueryInfo, callback ?: Callback) {
       // get keys
       const keys = Object.keys(info)
 
@@ -35,7 +34,7 @@ export function fakeTabs(data: TabStub[] = []) {
       // has query, filter tabs
       const tabs: TabStub[] = data.filter((tab: TabStub) => {
         return keys.every(key => {
-          return tab[key as keyof TabStub] == info[key as keyof QueryInfo]
+          return tab[key as keyof TabStub] === info[key as keyof QueryInfo]
         })
       })
 
@@ -44,5 +43,5 @@ export function fakeTabs(data: TabStub[] = []) {
     },
   }
 
-  return mock(chrome.tabs, mocked)
+  return mock('tabs', mocked)
 }

@@ -1,5 +1,5 @@
 import { chrome } from 'jest-chrome'
-import { getTime, resolve, mock } from '@utils/chrome'
+import { getTime, resolve, mock } from '../utils/chrome'
 
 import Filter = chrome.sessions.Filter
 import Session = chrome.sessions.Session
@@ -7,8 +7,7 @@ import Session = chrome.sessions.Session
 // allow users to pass in partial test data
 type SessionStub = Partial<chrome.sessions.Session>
 
-export function fakeSessions(data: SessionStub[] = []) {
-
+export function fakeSessions (data: SessionStub[] = []) {
   // database
   // TODO super-basic implementation!
   const db: Session[] = data.map((data, index) => {
@@ -21,12 +20,12 @@ export function fakeSessions(data: SessionStub[] = []) {
 
   // mock
   const mocked: any = {
-    getRecentlyClosed(filter: Filter, callback ?: Callback) {
+    getRecentlyClosed (filter: Filter, callback ?: Callback) {
       const maxResults = filter.maxResults || chrome.sessions.MAX_SESSION_RESULTS
       const sessions: Session[] = db.slice(0, maxResults)
       return resolve(callback, sessions)
     },
   }
 
-  return mock(chrome.sessions, mocked)
+  return mock('sessions', mocked)
 }

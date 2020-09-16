@@ -1,7 +1,7 @@
 import { chrome } from 'jest-chrome'
-import { mock } from '@utils/chrome'
+import { mock } from '../utils/chrome'
 
-export function fakeOmnibox() {
+export function fakeOmnibox () {
   const mocked: any = {}
-  return mock(chrome.omnibox, mocked)
+  return mock('omnibox', mocked)
 }

@@ -10,18 +10,17 @@ function makeWindow (data: WindowStub) {
   data.tabs = data.tabs || []
 }
 
-export function fakeWindows(data: WindowStub[] = []) {
-
+export function fakeWindows (data: WindowStub[] = []) {
   // database
   data.forEach(makeWindow)
 
   // mocked
   const mocked: any = {
-    get(id: number, callback ?: Callback) {
+    get (id: number, callback ?: Callback) {
       const window: WindowStub | undefined = data.find(window => window.id === id)
       return resolve(callback, window)
     },
   }
 
-  return mock(chrome.windows, mocked)
+  return mock('windows', mocked)
 }

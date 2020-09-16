@@ -9,3 +9,16 @@ export function isObject (value: any): boolean {
 export function isPlainObject (value: any): boolean {
   return isObject(value) && !Array.isArray(value)
 }
+
+export function get (obj: any, path: string | string[]): any {
+  const props: string[] = typeof path === 'string'
+    ? path.split('.')
+    : path
+  const prop: string | undefined = props.shift()
+  if (obj && prop) {
+    obj = obj[prop]
+    return props.length > 0
+      ? get(obj, props)
+      : obj
+  }
+}

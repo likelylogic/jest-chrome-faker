@@ -1,7 +1,7 @@
 import { chrome } from 'jest-chrome'
-import { mock } from '@utils/chrome'
+import { mock } from '../utils/chrome'
 
-export function fakeBookmarks() {
+export function fakeBookmarks () {
   const mocked: any = {}
-  return mock(chrome.bookmarks, mocked)
+  return mock('bookmarks', mocked)
 }
