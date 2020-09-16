@@ -3,7 +3,7 @@
 
 ## Abstract
 
-Jest Chrome Faker provides **working implementations** of parts of the [Chrome Web Extensions APIs](https://developer.chrome.com/extensions/devguide) for use in [Jest](https://jestjs.io/docs/en/getting-started) tests: 
+Jest Chrome Faker provides **working implementations** of parts of the [Chrome API](https://developer.chrome.com/extensions/devguide) (Web Extensions) for use in [Jest](https://jestjs.io/docs/en/getting-started): 
 
 ```js
 import { fakeTabs } from 'jest-chrome-faker'
@@ -24,23 +24,150 @@ it('should search tabs', () => {
 })
 ```
 
-Whilst there are [limitations](#limitations) to this approach, it does allow you to test parts of your extension code against fake data, which otherwise would not be possible.
+Using fakes (or "[test doubles](https://martinfowler.com/bliki/TestDouble.html)") makes it simple to programatically test parts of your extension code which rely heavily on the Chrome API, in a test environment, at speed, using stub data.
+
+Known as integration tests, Martin Fowler [says](https://martinfowler.com/bliki/IntegrationTest.html#:~:text=it's%20likely%20to%20significantly%20improve%20your%20testing%20speed):
+
+> [Integration tests] are likely to significantly improve your testing speed, ease of use, and resiliency. Since (narrow) integration tests are limited in scope, they often run very fast, so can run in early stages of a deployment pipeline, providing faster feedback should they go red.
+
+Whilst there are currently some [limitations](#limitations) with this library, the implementations' [source code](src/api) is fully decoupled from the base mock setup, and is easy to review and if necessary commit updates to.
+
+Check the [roadmap](#roadmap) for development plans.
 
 ## Setup
+
+### Installation
 
 Install the library and its peers via Yarn or NPM:
 
 ```sh
-npm i jest jest-chrome jest-chrome-faker -D
+npm i -D jest-chrome-faker jest-chrome jest
 ```
 
-Then, follow the setup instructions at [Jest Chrome](https://github.com/extend-chrome/jest-chrome).
+### Setup
+
+#### Jest
+
+Configure Jest to call a setup file directly before each test: 
+
+```js
+// jest.config.js
+module.exports = {
+  ...
+  setupFilesAfterEnv: [
+    '<rootDir>/tests/setup/jest-chrome.js' // choose a path that works for you
+  ]
+}
+```
+
+Create the setup file as per your configuration, and add the following code:
+
+```js
+// jest-chrome.js
+Object.assign(global, require('jest-chrome'))
+
+require('jest-chrome-faker').setChrome(global.chrome)
+```
+
+#### Using Web Extension Polyfill
+
+If you are using [webextension-polyfill](https://github.com/mozilla/webextension-polyfill) (or the TypeScript version of it) so you can use Mozilla's promise-based `browser.*` namespace in your application code, you will need to add the following lines:
+
+```js
+// fix to enable webextension-polyfill in test environment
+chrome.runtime.id = 'test'
+
+// inject webextension-polyfill's `browser` variable into the global namespace
+Object.assign(global, require('webextension-polyfill-ts'))
+```
+
+*Note: the JS and TS versions differ in their named and default exports, so adjust accordingly.*
+
+#### Further help
+
+For further information, see the docs for the associated libraries:
+
+- [Jest Chrome](https://github.com/extend-chrome/jest-chrome)
+- [Web Extension Polyfill](https://github.com/mozilla/webextension-polyfill)
+- [Web Extension Polyfill for TypeScript](https://github.com/Lusito/webextension-polyfill-ts/)
 
 ## Usage
 
-### Preamble
+Generally, usage goes like this:
 
-Jest Chrome Faker is designed to be used solely within your Jest test files.
+- import one or more `fake*` functions
+- fake one or more APIs using dummy data you provide
+- write and run your tests
+
+Below is a fairly contrived example to demonstrate querying the API and using the generated data:
+
+```js
+import { chrome } from 'jest-chrome'
+import { browser } from 'webextension-polyfill-ts'
+import { fakeTabs, fakeHistory } from 'jest-chrome-faker'
+
+// stub data
+const linkedIn = { url: 'http://linkedin.com', title: 'Linked In' }
+const google = { url: 'http://google.com', title: 'Google' }
+const msn = { url: 'http://msn.com', title: 'MSN' }
+
+// tests
+describe('integration', function () {
+
+  beforeAll(async function () {
+    fakeTabs([linkedIn, google, msn])
+    fakeHistory([linkedIn, google, msn, msn, msn])
+  })
+
+  it('should query visit times based on tab title', async function () {
+    const title = 'MSN'
+    const tabs = await browser.tabs.query({ title })
+    const url = tabs[0].url!
+    const visits = await browser.history.getVisits({ url })
+    const visitTimes = visits.map(visit => visit.visitTime)
+    expect(visitTimes).toEqual([2000, 3000, 4000])
+  })
+
+})
+```
+
+The library aims to stub out as much of the data as possible.
+
+As an example, the data returned from `history.getVisits()` is:
+
+```js
+[
+  {
+    id: '6',
+    visitId: '9',
+    referringVisitId: '0',
+    visitTime: 2000,
+    transition: 'link'
+  },
+  {
+    id: '6',
+    visitId: '10',
+    referringVisitId: '0',
+    visitTime: 3000,
+    transition: 'link'
+  },
+  {
+    id: '6',
+    visitId: '11',
+    referringVisitId: '0',
+    visitTime: 4000,
+    transition: 'link'
+  }
+]
+```
+
+As you can see, `id`s are unique and visit times are generated at 1-second intervals from the epoch.
+
+See the [tests](tests/) folder for full examples for all available APIs.
+
+## Project information
+
+### How it works
 
 The library is built on top of [Jest Chrome](https://github.com/extend-chrome/jest-chrome) which provides base mocks for the entire Chrome API:
 
@@ -50,66 +177,7 @@ it('should have called query', function() {
 })
 ```
 
-It is also compatible with [Web Extension Polyfill](https://github.com/mozilla/webextension-polyfill) library, meaning you can use Mozilla's promise-based `browser.*` namespace in your application code, and your tests will work without any additional setup.
-
-### Testing
-
-Generally, usage goes like this:
-
-- import one or more `fake*` functions
-- fake one or more APIs using dummy data you provide
-- write and run your tests
-
-Below is an example setup for the Tabs API:
-
-```js
-import { chrome } from 'jest-chrome'
-import { fakeTabs } from 'jest-chrome-faker'
-
-describe('tabs', function() {
-
-  let reset: () => any
-  const tabs = chrome.tabs
-  const data = [
-    { id: 1, url: 'http://linkedin.com', title: 'Linked In' },
-    { id: 2, url: 'http://google.com', title: 'Google' },
-    { id: 3, url: 'http://msn.com', title: 'MSN' },
-  ]
-
-  beforeAll(async function() {
-    reset = fakeTabs(data)
-  })
-
-  it('should get tabs', function() {
-    tabs.get(1, (tab) => {
-      expect(tab).toEqual(data[0])
-    })
-  })
-
-  it('should query one tab', function() {
-    const target = data[1]
-    tabs.query({ url: target.url }, (tabs) => {
-      expect(tabs.length).toBe(1)
-      expect(tabs).toStrictEqual([target])
-    })
-  })
-
-  it('should query all tabs', function() {
-    tabs.query({}, (tabs) => {
-      expect(tabs).toStrictEqual(data)
-    })
-  })
-
-  afterAll(function() {
-    reset()
-  })
-
-})
-```
-
-See the [tests](tests/) folder for full examples for all available APIs.
-
-## Project information
+Chrome Jest Faker builds on top of this and uses Jest's [mockImplementation()](https://jestjs.io/docs/en/22.x/mock-function-api#mockfnmockimplementationfn) to provide the actual functionality.
 
 ### Implementations
 
@@ -145,6 +213,10 @@ The rest of the APIs have been prioritised as follows:
 
 The plan is to work on completing the high priority items first, then reviewing which of the low priority items would be worth adding. As there are various non-testable APIs (for example, Tab Capture) it is likely that only a portion of the API will be fully faked.
 
+### API integrity
+
+To ensure faithfulness to the APIs it mocks, the plan it to set up automated [Contract Tests](https://martinfowler.com/bliki/ContractTest.html) to compare the output of the source code against the real Chrome API. 
+
 ## Contributing
 
 If you think you can help with further implementations:
@@ -157,4 +229,6 @@ If you think you can help with further implementations:
 - submit a PR
 
 Thanks.
+
+Please see the [contributing](contributing.md) document for more information.
 
