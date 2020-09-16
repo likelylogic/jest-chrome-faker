@@ -1,35 +1,33 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "lib": [
-      "es2017",
-      "dom",
-      "esnext.array"
-    ],
-    "module": "ES2015",
-    "moduleResolution": "node",
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
+    "target": "es6",
+    "module": "es2015",
     "declaration": true,
-    "outDir": "dist",
-    "sourceMap": true,
     "strict": true,
-    "baseUrl": "src",
+    "sourceMap": false,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declarationDir": "dist/types",
+    "outDir": "./dist",
+    "baseUrl": "./src",
     "paths": {
       "@/*": ["*"],
       "@utils/*": ["utils/*"],
       "@api/*": ["api/*"]
-    }
+    },
+    "typeRoots": [
+      "node_modules/@types"
+    ]
   },
   "include": [
-    "src",
-    "tests"
+    "src"
   ],
   "exclude": [
+    "tests",
     "dist"
   ]
 }

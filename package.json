@@ -8,53 +8,56 @@
     "chromium",
     "extension",
     "jest",
+    "fake",
     "mock",
     "test",
     "typescript"
   ],
-  "repository": "github:likelylogic/jest-chrome-fake",
-  "bugs": "https://github.com/likelylogic/jest-chrome-fake/issues",
+  "homepage": "https://github.com/likelylogic/jest-chrome-faker#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/likelylogic/jest-chrome-faker.git"
+  },
   "license": "MIT",
   "author": "Dave Stewart",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "types": "types/index.d.ts",
+  "module": "dist/jest-chrome-faker.es.js",
+  "main": "dist/jest-chrome-faker.cjs.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "dist",
-    "types",
-    "src"
+    "dist/*"
   ],
   "scripts": {
-    "build": "run-s build:clean build:pro",
-    "build:clean": "rm -rf dist types",
-    "build:dev": "rollup -c --environment NODE_ENV:development",
-    "build:pro": "rollup -c --environment NODE_ENV:production",
-    "build:watch": "npm run build:dev -- -w",
-    "postpublish": "rm -rf node_modules package-lock.json && pnpm i",
-    "start": "run-p build:watch",
-    "xpretest": "npm run build",
-    "test": "jest",
-    "alias-hq": "alias-hq"
+    "dev": "node build/clean.js && rollup -c build/rollup.js -w",
+    "clean": "node build/clean.js",
+    "build": "npm run clean && rollup -c build/rollup.js",
+    "prepare": "npm run lint:fix && npm run build",
+    "lint": "./node_modules/.bin/eslint 'src/**/*.ts' 'tests/**/*.ts'",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "jest --watchAll --verbose",
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.1",
     "@rollup/plugin-commonjs": "^12.0.0",
-    "@rollup/plugin-json": "^4.0.3",
-    "@rollup/plugin-node-resolve": "^8.0.0",
-    "@rollup/plugin-typescript": "^4.1.2",
-    "@sucrase/jest-plugin": "^2.0.0",
     "@types/jest": "^25.2.3",
     "@types/node": "^14.0.5",
     "@typescript-eslint/eslint-plugin": "^3.0.2",
     "@typescript-eslint/parser": "^3.0.2",
     "alias-hq": "^5.1.3",
-    "copyfiles": "^2.3.0",
     "eslint": "^7.1.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-jest": "^23.13.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "jest": "^26.4.2",
+    "jest-chrome": "^0.7.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
     "rollup": "^2.11.2",
+    "rollup-plugin-license": "^2.2.0",
+    "rollup-plugin-typescript2": "^0.27.2",
     "ts-jest": "^26.0.0",
     "tslib": "^2.0.0",
     "typescript": "^3.9.3"
@@ -62,8 +65,5 @@
   "peerDependencies": {
     "jest-chrome": "^0.7.0",
     "jest": "^24.9.0"
-  },
-  "dependencies": {
-    "jest-chrome": "^0.7.0"
   }
 }
