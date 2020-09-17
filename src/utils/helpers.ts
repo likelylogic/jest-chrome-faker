@@ -31,10 +31,3 @@ export function get (obj: any, path: string | string[]): any {
       : obj
   }
 }
-
-export function resolve (callback: Callback | undefined, value?: any) {
-  if (typeof callback === 'function') {
-    return callback(value)
-  }
-  return Promise.resolve(value)
-}

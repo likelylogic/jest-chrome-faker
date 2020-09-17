@@ -1,6 +1,6 @@
 import { chrome } from 'jest-chrome'
 import { getTime, mock } from '@utils/chrome'
-import { assign, resolve } from '@utils/helpers'
+import { assign } from '@utils/helpers'
 import { Tab } from '@api/tabs'
 import { Window } from '@api/windows'
 
@@ -20,15 +20,15 @@ class Session implements chrome.sessions.Session {
   }
 }
 
-type SessionStub = Partial<Session>
+type SessionData = Partial<Session>
 
 // ---------------------------------------------------------------------------------------------------------------------
 // factory
 // ---------------------------------------------------------------------------------------------------------------------
 
-export function fakeSessions (data: SessionStub[] = []) {
+export function fakeSessions (data: SessionData[] = []) {
   // database
-  // TODO super-basic implementation!
+  // TODO fix naive implementation!
   const db: Session[] = data.map((data, index) => {
     return new Session({
       ...data,
@@ -38,10 +38,10 @@ export function fakeSessions (data: SessionStub[] = []) {
 
   // mock
   const mocked: any = {
-    getRecentlyClosed (filter: Filter, callback ?: Callback) {
+    getRecentlyClosed (filter: Filter, callback: Function) {
       const maxResults = filter.maxResults || chrome.sessions.MAX_SESSION_RESULTS
       const sessions: Session[] = db.slice(0, maxResults)
-      return resolve(callback, sessions)
+      callback(sessions)
     },
   }
 

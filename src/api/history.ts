@@ -1,11 +1,12 @@
 import { chrome } from 'jest-chrome'
-import { isDefined, assign, resolve } from '@utils/helpers'
+import { isDefined, assign } from '@utils/helpers'
 import { getId, getTime, getTitle, mock} from '@utils/chrome'
-import HistoryQuery = chrome.history.HistoryQuery
 
 // ---------------------------------------------------------------------------------------------------------------------
 // classes
 // ---------------------------------------------------------------------------------------------------------------------
+
+import HistoryQuery = chrome.history.HistoryQuery
 
 export class HistoryItem implements chrome.history.HistoryItem {
   id = '0'
@@ -36,28 +37,13 @@ export class VisitItem implements chrome.history.VisitItem {
   }
 }
 
-type VisitStub = {
-  /// Optional. The URL navigated to by a user
-  url: string
-  /// The unique identifier for the item
-  id?: string
-  /// Optional. The title of the page when it was last loaded
-  title?: string
-  /// Optional. When this visit occurred, represented in milliseconds since the epoch
-  visitTime?: number
-  /// The unique identifier for this visit
-  visitId?: string
-  /// The visit ID of the referrer
-  referringVisitId?: string
-  /// The transition type for this visit from its referrer
-  transition?: string
-}
+type VisitData = Partial<HistoryItem & VisitItem>
 
 // ---------------------------------------------------------------------------------------------------------------------
 // factory
 // ---------------------------------------------------------------------------------------------------------------------
 
-function makeDatabase (data: VisitStub[] = []) {
+function makeDatabase (data: VisitData[] = []) {
   // items and visits
   const historyItems: HistoryItem[] = []
   const visitItems: VisitItem[] = []
@@ -93,7 +79,7 @@ function makeDatabase (data: VisitStub[] = []) {
 }
 
 // factory
-export function fakeHistory (data: VisitStub[] = []) {
+export function fakeHistory (data: VisitData[] = []) {
   // database
   const db = makeDatabase(data)
 
@@ -101,15 +87,15 @@ export function fakeHistory (data: VisitStub[] = []) {
   const mocked: any = {
     db,
 
-    getVisits (details: { url: string }, callback ?: Callback) {
+    getVisits (details: { url: string }, callback: Function) {
       const historyItem = db.historyItems.find(item => item.url === details.url)
       const items = historyItem
         ? db.visitItems.filter(visit => visit.id === historyItem.id)
         : []
-      return resolve(callback, items)
+      callback(items)
     },
 
-    search (info: HistoryQuery, callback ?: Callback) {
+    search (info: HistoryQuery, callback: Function) {
       // items
       let items: HistoryItem[] = db.historyItems
 
@@ -137,7 +123,7 @@ export function fakeHistory (data: VisitStub[] = []) {
       items = items.slice(0, Math.max(info.maxResults || 0, 100))
 
       // resolve
-      resolve(callback, items)
+      callback(items)
     },
   }
 

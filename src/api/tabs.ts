@@ -1,6 +1,6 @@
 import { chrome } from 'jest-chrome'
 import { getId, getTitle, mock } from '@utils/chrome'
-import { assign, resolve } from '@utils/helpers'
+import { assign } from '@utils/helpers'
 
 // ---------------------------------------------------------------------------------------------------------------------
 // classes
@@ -35,39 +35,41 @@ export class Tab implements chrome.tabs.Tab {
   }
 }
 
+type TabData = Partial<Tab>
+
 // ---------------------------------------------------------------------------------------------------------------------
 // factory
 // ---------------------------------------------------------------------------------------------------------------------
 
-export function fakeTabs (data: Partial<Tab>[] = []) {
+export function fakeTabs (data: TabData[] = []) {
   // database
   const db: Tab[] = data.map(data => new Tab(data))
 
   // mocked
   const mocked: any = {
-    get (id: number, callback ?: Callback) {
+    get (id: number, callback: Function) {
       const tab: Tab | undefined = db.find(tab => tab.id === id)
-      return resolve(callback, tab)
+      callback(tab)
     },
 
-    query (info: QueryInfo, callback ?: Callback) {
+    query (info: QueryInfo, callback: Function) {
       // get keys
       const keys = Object.keys(info)
 
       // empty object, return all tabs
       if (keys.length === 0) {
-        return resolve(callback, [...db])
+        callback([...db])
       }
 
       // has query, filter tabs
-      const tabs: Tab[] = db.filter((tab: Tab) => {
-        return keys.every(key => {
-          return tab[key as keyof Tab] === info[key as keyof QueryInfo]
+      else {
+        const tabs: Tab[] = db.filter((tab: Tab) => {
+          return keys.every(key => {
+            return tab[key as keyof Tab] === info[key as keyof QueryInfo]
+          })
         })
-      })
-
-      // resolve
-      resolve(callback, tabs)
+        callback(tabs)
+      }
     },
   }
 

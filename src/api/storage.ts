@@ -1,5 +1,4 @@
-import { chrome } from 'jest-chrome'
-import { isPlainObject, resolve } from '@utils/helpers'
+import { isPlainObject } from '@utils/helpers'
 import { mock } from '@utils/chrome'
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -14,7 +13,7 @@ type StorageAreaType = 'local' | 'managed' | 'sync'
 
 export function fakeStorage (data: Hash = {}, type: StorageAreaType = 'local') {
   const mocked: any = {
-    get (key: string | string[] | Hash | null, callback?: Callback): Hash {
+    get (key: string | string[] | Hash | null, callback: Function) {
       let value
 
       // all keys
@@ -45,30 +44,30 @@ export function fakeStorage (data: Hash = {}, type: StorageAreaType = 'local') {
       }
 
       // return
-      return resolve(callback, value)
+      callback(value)
     },
 
-    getBytesInUse (keys: string | string[], callback?: Callback) {
+    getBytesInUse (keys: string | string[], callback: Function) {
       const data = this.get(keys)
       const json = JSON.stringify(data)
-      return resolve(callback, json.length)
+      callback(json.length)
     },
 
-    set (items: Hash, callback?: Callback) {
+    set (items: Hash, callback: Function) {
       Object.assign(data, items)
-      return resolve(callback)
+      callback()
     },
 
-    remove (key: string | string[], callback ?: Callback) {
+    remove (key: string | string[], callback: Function) {
       Array.isArray(key)
         ? key.forEach(key => delete data[key])
         : delete data[key]
-      return resolve(callback)
+      callback()
     },
 
-    clear (callback ?: Callback) {
+    clear (callback: Function) {
       data = {}
-      return resolve(callback)
+      callback()
     },
   }
 

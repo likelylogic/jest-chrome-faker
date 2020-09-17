@@ -1,5 +1,5 @@
 import { getId, mock } from '@utils/chrome'
-import { assign, resolve } from '@utils/helpers'
+import { assign } from '@utils/helpers'
 
 // ---------------------------------------------------------------------------------------------------------------------
 // classes
@@ -23,23 +23,25 @@ export class Window implements chrome.windows.Window {
   }
 }
 
+type WindowData = Partial<Window>
+
 // ---------------------------------------------------------------------------------------------------------------------
 // factory
 // ---------------------------------------------------------------------------------------------------------------------
 
-export function fakeWindows (data: Partial<Window>[] = []) {
+export function fakeWindows (data: WindowData[] = []) {
   // database
   const db = data.map(data => new Window(data))
 
   // mocked
   const mocked: any = {
-    get (id: number, info: chrome.windows.GetInfo, callback ?: Callback) {
+    get (id: number, info: chrome.windows.GetInfo, callback: Function) {
       const window: Window | undefined = db.find(window => window.id === id)
-      return resolve(callback, window)
+      callback(window)
     },
 
-    getAll (info: chrome.windows.GetInfo, callback: Callback) {
-      return resolve(callback, [...db])
+    getAll (info: chrome.windows.GetInfo, callback: Function) {
+      callback([...db])
     }
   }
 
