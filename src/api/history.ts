@@ -1,11 +1,42 @@
 import { chrome } from 'jest-chrome'
-import { isDefined } from '../utils/helpers'
-import { getId, getTime, getTitle, mock, resolve } from '../utils/chrome'
+import { isDefined, assign, resolve } from '@utils/helpers'
+import { getId, getTime, getTitle, mock} from '@utils/chrome'
 import HistoryQuery = chrome.history.HistoryQuery
-import HistoryItem = chrome.history.HistoryItem
-import VisitItem = chrome.history.VisitItem
 
-type Visit = {
+// ---------------------------------------------------------------------------------------------------------------------
+// classes
+// ---------------------------------------------------------------------------------------------------------------------
+
+export class HistoryItem implements chrome.history.HistoryItem {
+  id = '0'
+  url = ''
+  title = ''
+  lastVisitTime = 0
+  typedCount = 0
+  visitCount = 0
+
+  constructor (data: Partial<HistoryItem> = {}) {
+    assign(this, data)
+    this.id = String(getId())
+    this.url = data.url || ''
+    this.title = data.title || getTitle(data.url)
+  }
+}
+
+export class VisitItem implements chrome.history.VisitItem {
+  id = ''
+  visitId = ''
+  referringVisitId = '0'
+  visitTime = 0
+  transition = 'link'
+
+  constructor (data: Partial<VisitItem> = {}) {
+    assign(this, data)
+    this.visitId = String(getId())
+  }
+}
+
+type VisitStub = {
   /// Optional. The URL navigated to by a user
   url: string
   /// The unique identifier for the item
@@ -22,38 +53,32 @@ type Visit = {
   transition?: string
 }
 
-function makeDatabase (data: Visit[] = []) {
+// ---------------------------------------------------------------------------------------------------------------------
+// factory
+// ---------------------------------------------------------------------------------------------------------------------
+
+function makeDatabase (data: VisitStub[] = []) {
   // items and visits
   const historyItems: HistoryItem[] = []
   const visitItems: VisitItem[] = []
 
   // generate data
-  data.forEach((visit: Visit, index) => {
+  data.forEach((visit, index) => {
     // variables
     const url = visit.url
 
     // history item
     let historyItem = historyItems.find(item => item.url === url)
     if (!historyItem) {
-      historyItem = {
-        id: String(getId()),
-        url: visit.url,
-        title: visit.title || getTitle(visit.url),
-        lastVisitTime: 0,
-        typedCount: 0,
-        visitCount: 0,
-      }
+      historyItem = new HistoryItem(visit)
       historyItems.push(historyItem)
     }
 
     // visit item
-    const visitItem: VisitItem = {
+    const visitItem: VisitItem = new VisitItem({
       id: historyItem.id,
-      visitId: String(getId()),
-      referringVisitId: '0',
       visitTime: getTime(index),
-      transition: 'link',
-    }
+    })
     visitItems.push(visitItem)
 
     // update history item
@@ -68,7 +93,7 @@ function makeDatabase (data: Visit[] = []) {
 }
 
 // factory
-export function fakeHistory (data: Visit[] = []) {
+export function fakeHistory (data: VisitStub[] = []) {
   // database
   const db = makeDatabase(data)
 

@@ -1,8 +1,16 @@
 import { chrome } from 'jest-chrome'
-import { isPlainObject } from '../utils/helpers'
-import { resolve, mock } from '../utils/chrome'
+import { isPlainObject, resolve } from '@utils/helpers'
+import { mock } from '@utils/chrome'
+
+// ---------------------------------------------------------------------------------------------------------------------
+// classes
+// ---------------------------------------------------------------------------------------------------------------------
 
 type StorageAreaType = 'local' | 'managed' | 'sync'
+
+// ---------------------------------------------------------------------------------------------------------------------
+// factory
+// ---------------------------------------------------------------------------------------------------------------------
 
 export function fakeStorage (data: Hash = {}, type: StorageAreaType = 'local') {
   const mocked: any = {

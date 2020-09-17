@@ -1,21 +1,39 @@
 import { chrome } from 'jest-chrome'
-import { getTime, resolve, mock } from '../utils/chrome'
+import { getTime, mock } from '@utils/chrome'
+import { assign, resolve } from '@utils/helpers'
+import { Tab } from '@api/tabs'
+import { Window } from '@api/windows'
+
+// ---------------------------------------------------------------------------------------------------------------------
+// classes
+// ---------------------------------------------------------------------------------------------------------------------
 
 import Filter = chrome.sessions.Filter
-import Session = chrome.sessions.Session
 
-// allow users to pass in partial test data
-type SessionStub = Partial<chrome.sessions.Session>
+class Session implements chrome.sessions.Session {
+  lastModified = 0
+  tab?: Tab
+  window?: Window
+
+  constructor (data: Partial<Session> = {}) {
+    assign(this, data)
+  }
+}
+
+type SessionStub = Partial<Session>
+
+// ---------------------------------------------------------------------------------------------------------------------
+// factory
+// ---------------------------------------------------------------------------------------------------------------------
 
 export function fakeSessions (data: SessionStub[] = []) {
   // database
   // TODO super-basic implementation!
   const db: Session[] = data.map((data, index) => {
-    const session: Session = {
+    return new Session({
       ...data,
       lastModified: data.lastModified || getTime(index),
-    }
-    return session
+    })
   })
 
   // mock

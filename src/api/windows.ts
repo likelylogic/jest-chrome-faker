@@ -1,25 +1,46 @@
-import { chrome } from 'jest-chrome'
-import { resolve, mock, getId } from '../utils/chrome'
+import { getId, mock } from '@utils/chrome'
+import { assign, resolve } from '@utils/helpers'
 
-// allow users to pass in partial test data
-type WindowStub = Partial<chrome.windows.Window>
+// ---------------------------------------------------------------------------------------------------------------------
+// classes
+// ---------------------------------------------------------------------------------------------------------------------
 
-// TODO write a proper factory for this
-function makeWindow (data: WindowStub) {
-  data.id = getId(data.id) as number
-  data.tabs = data.tabs || []
+export class Window implements chrome.windows.Window {
+  id = 0
+  alwaysOnTop = false
+  incognito = false
+  focused = false
+  state = 'normal'
+  type = 'normal'
+  left = 0
+  top = 0
+  width = 1920
+  height = 1024
+
+  constructor (data: Hash) {
+    assign(this, data)
+    this.id = getId(data.id) as number
+  }
 }
 
-export function fakeWindows (data: WindowStub[] = []) {
+// ---------------------------------------------------------------------------------------------------------------------
+// factory
+// ---------------------------------------------------------------------------------------------------------------------
+
+export function fakeWindows (data: Partial<Window>[] = []) {
   // database
-  data.forEach(makeWindow)
+  const db = data.map(data => new Window(data))
 
   // mocked
   const mocked: any = {
-    get (id: number, callback ?: Callback) {
-      const window: WindowStub | undefined = data.find(window => window.id === id)
+    get (id: number, info: chrome.windows.GetInfo, callback ?: Callback) {
+      const window: Window | undefined = db.find(window => window.id === id)
       return resolve(callback, window)
     },
+
+    getAll (info: chrome.windows.GetInfo, callback: Callback) {
+      return resolve(callback, [...db])
+    }
   }
 
   return mock('windows', mocked)
