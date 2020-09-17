@@ -1,20 +1,17 @@
 import { chrome } from 'jest-chrome'
 import { fakeHistory } from '@/index'
-
-function partial (obj: Hash) {
-  return expect.objectContaining(obj)
-}
+import { partial, linkedIn, google, msn } from '../helpers'
 
 describe('history', function () {
   let reset: () => any
   const history = chrome.history
   const data = [
-    { url: 'https://linkedin.com', title: 'Linked In' },
-    { url: 'https://google.com', title: 'Google' },
-    { url: 'https://msn.com', title: 'MSN' },
-    { url: 'https://msn.com', title: 'MSN' },
-    { url: 'https://msn.com', title: 'MSN' },
-    { url: 'https://msn.com', title: 'MSN' },
+    linkedIn,
+    google,
+    msn,
+    msn,
+    msn,
+    msn,
   ]
 
   beforeAll(async function () {
@@ -22,7 +19,7 @@ describe('history', function () {
   })
 
   it('should get all visits for a single URL', function () {
-    history.getVisits({ url: data[2].url }, (visits) => {
+    history.getVisits({ url: msn.url }, (visits) => {
       expect(visits.length).toEqual(4)
     })
   })
@@ -30,9 +27,9 @@ describe('history', function () {
   it('should get search info for empty text', function () {
     history.search({ text: '' }, (items) => {
       expect(items).toEqual([
-        partial({ url: data[0].url, visitCount: 1, lastVisitTime: 0 }),
-        partial({ url: data[1].url, visitCount: 1, lastVisitTime: 1000 }),
-        partial({ url: data[2].url, visitCount: 4, lastVisitTime: 5000 }),
+        partial({ url: linkedIn.url, visitCount: 1, lastVisitTime: 0 }),
+        partial({ url: google.url, visitCount: 1, lastVisitTime: 1000 }),
+        partial({ url: msn.url, visitCount: 4, lastVisitTime: 5000 }),
       ])
     })
   })
@@ -40,8 +37,8 @@ describe('history', function () {
   it('should get search info for text', function () {
     history.search({ text: 'n' }, (items) => {
       expect(items).toEqual([
-        partial({ url: data[0].url, visitCount: 1, lastVisitTime: 0 }),
-        partial({ url: data[2].url, visitCount: 4, lastVisitTime: 5000 }),
+        partial({ url: linkedIn.url, visitCount: 1, lastVisitTime: 0 }),
+        partial({ url: msn.url, visitCount: 4, lastVisitTime: 5000 }),
       ])
     })
   })
