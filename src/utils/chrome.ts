@@ -27,13 +27,6 @@ export function getTitle (url = '') {
     : text
 }
 
-export function resolve (callback: Callback | undefined, value?: any) {
-  if (typeof callback === 'function') {
-    return callback(value)
-  }
-  return Promise.resolve(value)
-}
-
 export function mock (api: string, mock: Hash) {
   // debug
   if (!chrome) {

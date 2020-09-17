@@ -10,6 +10,15 @@ export function isPlainObject (value: any): boolean {
   return isObject(value) && !Array.isArray(value)
 }
 
+export function assign (target, source) {
+  Object.keys(target).forEach(key => {
+    const value = source[key]
+    if (typeof value !== 'undefined') {
+      target[key] = value
+    }
+  })
+}
+
 export function get (obj: any, path: string | string[]): any {
   const props: string[] = typeof path === 'string'
     ? path.split('.')
@@ -21,4 +30,11 @@ export function get (obj: any, path: string | string[]): any {
       ? get(obj, props)
       : obj
   }
+}
+
+export function resolve (callback: Callback | undefined, value?: any) {
+  if (typeof callback === 'function') {
+    return callback(value)
+  }
+  return Promise.resolve(value)
 }
