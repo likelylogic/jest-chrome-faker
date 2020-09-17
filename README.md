@@ -26,11 +26,13 @@ it('should search tabs', () => {
 
 Using fakes (or "[test doubles](https://martinfowler.com/bliki/TestDouble.html)") makes it simple to programatically test parts of your extension code which rely heavily on the Chrome API, in a test environment, at speed, using stub data.
 
-Known as integration tests, Martin Fowler [says](https://martinfowler.com/bliki/IntegrationTest.html#:~:text=it's%20likely%20to%20significantly%20improve%20your%20testing%20speed):
+Known as Integration Tests, Martin Fowler [says](https://martinfowler.com/bliki/IntegrationTest.html#:~:text=it's%20likely%20to%20significantly%20improve%20your%20testing%20speed):
 
-> [Integration tests] are likely to significantly improve your testing speed, ease of use, and resiliency. Since (narrow) integration tests are limited in scope, they often run very fast, so can run in early stages of a deployment pipeline, providing faster feedback should they go red.
+> [Integration Tests] are likely to significantly improve your testing speed, ease of use, and resiliency.
+>
+> Since they are limited in scope, they often run very fast, so can run in early stages of a deployment pipeline, providing faster feedback should they go red.
 
-Whilst there are currently some [limitations](#limitations) with this library, the implementations' [source code](src/api) is fully decoupled from the base mock setup, and is easy to review and if necessary commit updates to.
+Whilst at this early stage of development there are some [limitations](#limitations), the implementations' [source code](src/api) is fully decoupled from the base mock setup, and is easy to review, test and commit updates to.
 
 Check the [roadmap](#roadmap) for development plans.
 
@@ -101,7 +103,7 @@ Generally, usage goes like this:
 
 Below is a fairly contrived example to demonstrate querying the API and using the generated data:
 
-```js
+```ts
 import { chrome } from 'jest-chrome'
 import { browser } from 'webextension-polyfill-ts'
 import { fakeTabs, fakeHistory } from 'jest-chrome-faker'
@@ -131,7 +133,7 @@ describe('integration', function () {
 })
 ```
 
-The library aims to stub out as much of the data as possible.
+The library aims to logically "fill in" missing data where it can.
 
 As an example, the data returned from `history.getVisits()` is:
 
@@ -163,7 +165,7 @@ As an example, the data returned from `history.getVisits()` is:
 
 As you can see, `id`s are unique and visit times are generated at 1-second intervals from the epoch.
 
-See the [tests](tests/) folder for full examples for all available APIs.
+See the [tests](tests/unit) folder for full examples for all available APIs.
 
 ## Project information
 
@@ -202,7 +204,7 @@ At some point, events will be investigated, hopefully with the result that they 
 
 ### Roadmap
 
-At this moment, Jest Chrome faker has partial implementations of Storage, Tabs and History:
+At this moment, Jest Chrome faker has partial implementations of some core APIs:
 
 - [likelylogic/jest-chrome-faker/tree/master/src/api](src/api)
 
@@ -211,24 +213,15 @@ The rest of the APIs have been prioritised as follows:
 - [High Priority](https://github.com/likelylogic/jest-chrome-fake/issues?q=is%3Aopen+is%3Aissue+milestone%3A%22High+Priority%22)
 - [Low Priority](https://github.com/likelylogic/jest-chrome-fake/issues/1)
 
+Check individual [API issues](https://github.com/likelylogic/jest-chrome-faker/issues/8) to see notes, and what has been completed.
+
 The plan is to work on completing the high priority items first, then reviewing which of the low priority items would be worth adding. As there are various non-testable APIs (for example, Tab Capture) it is likely that only a portion of the API will be fully faked.
 
-### API integrity
+### API parity
 
-To ensure faithfulness to the APIs it mocks, the plan it to set up automated [Contract Tests](https://martinfowler.com/bliki/ContractTest.html) to compare the output of the source code against the real Chrome API. 
+To ensure parity to the APIs it mocks, the plan it to set up some kind of [Contract Tests](https://martinfowler.com/bliki/ContractTest.html) to compare the output of the source code against the real Chrome API. 
 
 ## Contributing
 
-If you think you can help with further implementations:
-
-- check the [issues](https://github.com/likelylogic/jest-chrome-faker/issues) to see what needs to be done
-- review existing [source code](src) (including utilities)
-- open a ticket, or comment on an existing ticket, and discuss
-- if appropriate, write your implementation
-- add [tests](tests) for each faked entity
-- submit a PR
-
-Thanks.
-
-Please see the [contributing](contributing.md) document for more information.
+Please see the [contributing](contributing.md) document.
 
