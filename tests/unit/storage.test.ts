@@ -7,7 +7,7 @@ describe('storage', function () {
   const data = { foo: 1 }
 
   beforeAll(async function () {
-    reset = fakeStorage('local', data)
+    reset = fakeStorage(data)
   })
 
   it('should set data', function () {
