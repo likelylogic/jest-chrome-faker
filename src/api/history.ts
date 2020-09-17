@@ -87,15 +87,15 @@ export function fakeHistory (data: VisitData[] = []) {
   const mocked: any = {
     db,
 
-    getVisits (details: { url: string }, callback: Function) {
+    getVisits (details: { url: string }, done: Function) {
       const historyItem = db.historyItems.find(item => item.url === details.url)
       const items = historyItem
         ? db.visitItems.filter(visit => visit.id === historyItem.id)
         : []
-      callback(items)
+      done(items)
     },
 
-    search (info: HistoryQuery, callback: Function) {
+    search (info: HistoryQuery, done: Function) {
       // items
       let items: HistoryItem[] = db.historyItems
 
@@ -123,7 +123,7 @@ export function fakeHistory (data: VisitData[] = []) {
       items = items.slice(0, Math.max(info.maxResults || 0, 100))
 
       // resolve
-      callback(items)
+      done(items)
     },
   }
 

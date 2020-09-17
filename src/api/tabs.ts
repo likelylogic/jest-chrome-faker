@@ -47,18 +47,18 @@ export function fakeTabs (data: TabData[] = []) {
 
   // mocked
   const mocked: any = {
-    get (id: number, callback: Function) {
+    get (id: number, done: Function) {
       const tab: Tab | undefined = db.find(tab => tab.id === id)
-      callback(tab)
+      done(tab)
     },
 
-    query (info: QueryInfo, callback: Function) {
+    query (info: QueryInfo, done: Function) {
       // get keys
       const keys = Object.keys(info)
 
       // empty object, return all tabs
       if (keys.length === 0) {
-        callback([...db])
+        done([...db])
       }
 
       // has query, filter tabs
@@ -68,7 +68,7 @@ export function fakeTabs (data: TabData[] = []) {
             return tab[key as keyof Tab] === info[key as keyof QueryInfo]
           })
         })
-        callback(tabs)
+        done(tabs)
       }
     },
   }

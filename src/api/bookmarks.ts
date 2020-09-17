@@ -12,6 +12,9 @@ type BookmarkData = Partial<chrome.bookmarks.BookmarkTreeNode>
 // ---------------------------------------------------------------------------------------------------------------------
 
 export function fakeBookmarks (data: BookmarkData[]) {
-  const mocked: any = {}
+  const db = data
+  const mocked: any = {
+    db
+  }
   return mock('bookmarks', mocked)
 }

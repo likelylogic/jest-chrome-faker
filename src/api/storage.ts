@@ -13,7 +13,7 @@ type StorageAreaType = 'local' | 'managed' | 'sync'
 
 export function fakeStorage (data: Hash = {}, type: StorageAreaType = 'local') {
   const mocked: any = {
-    get (key: string | string[] | Hash | null, callback: Function) {
+    get (key: string | string[] | Hash | null, done: Function) {
       let value
 
       // all keys
@@ -44,30 +44,30 @@ export function fakeStorage (data: Hash = {}, type: StorageAreaType = 'local') {
       }
 
       // return
-      callback(value)
+      done(value)
     },
 
-    getBytesInUse (keys: string | string[], callback: Function) {
+    getBytesInUse (keys: string | string[], done: Function) {
       const data = this.get(keys)
       const json = JSON.stringify(data)
-      callback(json.length)
+      done(json.length)
     },
 
-    set (items: Hash, callback: Function) {
+    set (items: Hash, done: Function) {
       Object.assign(data, items)
-      callback()
+      done()
     },
 
-    remove (key: string | string[], callback: Function) {
+    remove (key: string | string[], done: Function) {
       Array.isArray(key)
         ? key.forEach(key => delete data[key])
         : delete data[key]
-      callback()
+      done()
     },
 
-    clear (callback: Function) {
+    clear (done: Function) {
       data = {}
-      callback()
+      done()
     },
   }
 

@@ -35,13 +35,13 @@ export function fakeWindows (data: WindowData[] = []) {
 
   // mocked
   const mocked: any = {
-    get (id: number, info: chrome.windows.GetInfo, callback: Function) {
+    get (id: number, info: chrome.windows.GetInfo, done: Function) {
       const window: Window | undefined = db.find(window => window.id === id)
-      callback(window)
+      done(window)
     },
 
-    getAll (info: chrome.windows.GetInfo, callback: Function) {
-      callback([...db])
+    getAll (info: chrome.windows.GetInfo, done: Function) {
+      done([...db])
     }
   }
 

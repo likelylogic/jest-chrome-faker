@@ -1,4 +1,3 @@
-import { chrome } from 'jest-chrome'
 import { mock } from '@utils/chrome'
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -14,6 +13,9 @@ type RuntimeData = Partial<{
 // ---------------------------------------------------------------------------------------------------------------------
 
 export function fakeRuntime (data: RuntimeData = {}) {
-  const mocked: any = {}
+  const db = data
+  const mocked: any = {
+    db
+  }
   return mock('runtime', mocked)
 }

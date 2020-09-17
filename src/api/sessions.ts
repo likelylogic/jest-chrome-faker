@@ -38,10 +38,10 @@ export function fakeSessions (data: SessionData[] = []) {
 
   // mock
   const mocked: any = {
-    getRecentlyClosed (filter: Filter, callback: Function) {
+    getRecentlyClosed (filter: Filter, done: Function) {
       const maxResults = filter.maxResults || chrome.sessions.MAX_SESSION_RESULTS
       const sessions: Session[] = db.slice(0, maxResults)
-      callback(sessions)
+      done(sessions)
     },
   }
 
