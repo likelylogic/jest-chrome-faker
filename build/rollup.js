@@ -1,6 +1,7 @@
 import path from 'path'
 import license from 'rollup-plugin-license'
 import ts from 'rollup-plugin-typescript2'
+import ttypescript from 'ttypescript'
 
 const pkg = require('../package.json')
 
@@ -25,6 +26,7 @@ function bundle (format) {
         },
       }),
       ts({
+        typescript: ttypescript,
         cacheRoot: 'build/.rpt2_cache',
         check: format === 'es',
         tsconfigOverride: {
