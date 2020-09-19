@@ -1,18 +1,19 @@
 import { chrome } from 'jest-chrome'
 import { fakeStorage } from '@/index'
+import { inspect } from '../helpers'
 
-describe('storage', function () {
-  let reset: () => any
-  const storage = chrome.storage.local
-  const data = { foo: 1 }
+let reset: () => any
+const storage = chrome.storage.local
+const data = { foo: 1 }
 
-  beforeAll(async function () {
-    reset = fakeStorage(data)
-  })
+beforeAll(async function () {
+  reset = fakeStorage(data)
+})
 
+describe('methods', function () {
   it('should set data', function () {
     storage.set({ foo: 100 }, () => {
-      expect(data.foo).toEqual(100)
+      expect(storage.set).toHaveBeenCalled()
     })
   })
 
@@ -25,9 +26,20 @@ describe('storage', function () {
     })
   })
 
-  it('should log all calls', function () {
-    expect(storage.set).toHaveBeenCalledTimes(1)
-    expect(storage.get).toHaveBeenCalledTimes(2)
+  it('should remove data', function () {
+    storage.remove('bar', () => {
+      storage.get('bar', (value) => {
+        expect(value).toStrictEqual({ bar: undefined })
+      })
+    })
+  })
+
+  it('should clear data', function () {
+    storage.clear(() => {
+      storage.get({}, (value) => {
+        expect(value).toStrictEqual({})
+      })
+    })
   })
 
   it('should reset', function () {
@@ -35,4 +47,42 @@ describe('storage', function () {
     expect(storage.set).toHaveBeenCalledTimes(0)
     expect(storage.get).toHaveBeenCalledTimes(0)
   })
+})
+
+describe('events', function () {
+
+  let reset: () => any
+  const storage = chrome.storage.local
+  const data = { foo: 1 }
+  let spy, onChanged
+
+  beforeAll(async function () {
+    fakeStorage(data)
+    spy = jest.fn()
+    onChanged = chrome.storage.onChanged
+    onChanged.addListener(spy)
+  })
+
+  it('should correctly report a set', async function () {
+    storage.set({ foo: 2, bar: 3 })
+    expect(spy).toHaveBeenNthCalledWith(1, {
+      foo: { oldValue: 1, newValue: 2 },
+      bar: { newValue: 3 },
+    }, 'local')
+  })
+
+  it('should correctly report a remove', async function () {
+    storage.remove('foo')
+    expect(spy).toHaveBeenNthCalledWith(2, {
+      foo: { oldValue: 2 },
+    }, 'local')
+  })
+
+  it('should correctly report a clear', async function () {
+    storage.clear()
+    expect(spy).toHaveBeenNthCalledWith(3, {
+      bar: { oldValue: 3 },
+    }, 'local')
+  })
+
 })

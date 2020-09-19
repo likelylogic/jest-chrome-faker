@@ -1,3 +1,10 @@
+import cloneFn from 'clone'
+import deepIs from 'deep-is'
+
+export function clone (value) {
+  return cloneFn(value)
+}
+
 export function isDefined (value: any) {
   return typeof value !== 'undefined'
 }
@@ -8,6 +15,10 @@ export function isObject (value: any): boolean {
 
 export function isPlainObject (value: any): boolean {
   return isObject(value) && !Array.isArray(value)
+}
+
+export function isEqual (src: any, trg: any) {
+  return deepIs(src, trg)
 }
 
 export function assign (target, source) {
@@ -30,4 +41,11 @@ export function get (obj: any, path: string | string[]): any {
       ? get(obj, props)
       : obj
   }
+}
+
+export function resolve (done: Function | undefined, value?: any) {
+  if (typeof done === 'function') {
+    return done(value)
+  }
+  return Promise.resolve(value)
 }

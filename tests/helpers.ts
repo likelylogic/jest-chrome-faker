@@ -5,5 +5,5 @@ export const msn = { url: 'http://msn.com', title: 'MSN' }
 export const partial = expect.objectContaining
 export function inspect (value) {
   const inspect = require('util').inspect
-  console.log(inspect(value))
+  console.log(inspect(value, { depth: null }))
 }

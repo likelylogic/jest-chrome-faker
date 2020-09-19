@@ -6,6 +6,10 @@ export function setChrome (value) {
   chrome = value
 }
 
+export function getChrome () {
+  return chrome
+}
+
 let _id = 0
 
 export function getId (id?: number | string): number | string {
@@ -61,5 +65,18 @@ export function mock (api: string, mock: Hash) {
         delete real[key]
       }
     })
+  }
+}
+
+export function mockEvent (api: string) {
+  return function (event: string, ...args) {
+    if (!event.startsWith('on')) {
+      event = 'on' + event.replace(/\w/, c => c.toUpperCase())
+    }
+    const handler = chrome[api][event]
+    if (handler && handler.callListeners) {
+      return handler.callListeners(...args)
+    }
+    throw new Error(`[Jest Chrome Faker] Unknown event "${api}.${event}"`)
   }
 }
