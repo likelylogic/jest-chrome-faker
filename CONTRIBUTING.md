@@ -21,15 +21,21 @@ The repository is laid out as below:
 
 ## Strategy
 
-The Chrome API is large, so modelling *everything* explicitly would be a **big** (and probably futile) job.
+As mentioned in the main [readme](README.md#implementations), modelling the entire Chrome API is not a realistic proposition.
 
 Rather, a "good enough" attempt can be made to fake what is useful: 
 
 - **API** - only some of the API can be reasonably faked
-- **Methods** - should update internal state and return accurate responses 
-- **Events** - events are currently not handled, but the plan is to handle them
+- **Data** - the user should be able to provide initial state and it should be updated
+- **Methods** - should update state and return accurate responses 
 
-See the [Roadmap](README.md#roadmap) section in the main readme for more information.
+What is not required right now are:
+
+- **Events** - events *may* be fired if easy to do, but not required
+- **Errors** - error handling is outside the scope of the initial High Priority items
+- **Interaction** - updating related APIs is not required right now
+
+At this initial stage of development, the aim is to get the broad brush strokes in, rather than achieve 1:1 parity with the Chrome API.
 
 ## Writing an implementation
 
@@ -111,7 +117,8 @@ Note:
 
   - mock APIs appropriately and faithfully
   - set and get data to / from the database as required
-  - return values using the `done()` callback
+  - optionally handle events using the  `mockEvent()` helper
+  - return values using the `resolve()` helper
 
 - Fake classes should
 

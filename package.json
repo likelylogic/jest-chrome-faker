@@ -1,6 +1,6 @@
 {
   "name": "jest-chrome-faker",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Working implementations of Chrome Extension API for use with Jest. Builds on extend-chrome/jest-chrome",
   "keywords": [
     "api",

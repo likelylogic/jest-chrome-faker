@@ -3,7 +3,7 @@
 
 ## Abstract
 
-Jest Chrome Faker provides **working implementations** of parts of the [Chrome API](https://developer.chrome.com/extensions/devguide) (Web Extensions) for use in [Jest](https://jestjs.io/docs/en/getting-started): 
+Jest Chrome Faker provides [working implementations](#implementations) of parts of the [Chrome API](https://developer.chrome.com/extensions/devguide) (Web Extensions) for use in [Jest](https://jestjs.io/docs/en/getting-started): 
 
 ```js
 import { fakeTabs } from 'jest-chrome-faker'
@@ -32,7 +32,7 @@ Known as Integration Tests, Martin Fowler [says](https://martinfowler.com/bliki/
 >
 > Since they are limited in scope, they often run very fast, so can run in early stages of a deployment pipeline, providing faster feedback should they go red.
 
-Whilst at this early stage of development there are some [limitations](#limitations), the implementations' [source code](src/api) is fully decoupled from the base mock setup, and is easy to review, test and commit updates to.
+Whilst at this early stage of development there are some [limitations](#current-limitations), the implementations' [source code](src/api) is fully decoupled from the base mock setup, and is easy to review, test and commit updates to.
 
 Check the [roadmap](#roadmap) for development plans.
 
@@ -183,43 +183,72 @@ Chrome Jest Faker builds on top of this and uses Jest's [mockImplementation()](h
 
 ### Implementations
 
-The library's implementations are meant to provide a usable base with which to test basic functionality.
+**Jest Chrome Faker promises "working implementations" – but what does that mean?**
 
-Right now, the project's aims are to concentrate on **methods and data**, rather than events.
+Understandably, the full functionality of a Google Chrome extension is not going to be available in a Node environment, but the library provides both implementations and a framework to ensure that working, faithful, implementations of core APIs can be faked to a reasonable level.
 
-The current implementations aim to:
+#### Areas
 
-- replicate the methods and data functionality of the live extension environment
-- generate missing data or provide sensible defaults when supplying stub data
-- manage data within their own namespace only
+The areas the library needs to deliver on are:
 
-### Limitations
+- **APIs** - are the key APIs available, and can they be expected to behave faithfully? 
+- **Data** - is the user able to stub initial state, and then have it update accordingly?
+- **Methods** - are the key methods available, and do they update state as expected?
+- **Events** - do the right events fire, at the right time, with the right payloads?
+- **Errors** - does the library handle and report errors as per the real Extensions environment?
+- **Integration** - do the disparate parts of the API interact, and if so, how do they update each other?  
 
-What this means in practice is that modifying a tab's URL will update the tab, but will not:
+#### Aims
 
-- update related items, such as history
-- fire any events that your code can listen and respond to
+The **base aim** for implementations is:
 
-At some point, events will be investigated, hopefully with the result that they will complete the circle.
+- to provide **minimal implementations** for core APIs ([History](https://github.com/likelylogic/jest-chrome-faker/issues/3), [Storage](https://github.com/likelylogic/jest-chrome-faker/issues/8), [Tabs](https://github.com/likelylogic/jest-chrome-faker/issues/9), etc)
+
+A **minimal implementation** would:
+
+- allow the user to easily provide initial state
+- Have the framework fill in default values
+- model and maintain state within the API as subsequent methods are called
+- provide at least the main methods (specific to each API) so that basic integrations can be tested
+
+A minimal implementation **would not** be guaranteed to:
+
+- reproduce all properties and methods
+- faithfully fire all events
+- update related APIs
+- report errors
+
+#### Current limitations
+
+What this means in practice is that individual implementations **will behave provide different levels of faithfulness** depending on how big or complex each API is, and whether the tradeoff for completeness is a reasonable one, given the work in involved.
+
+For example, modifying a tab's URL:
+
+- updates the data within the Tabs API
+- fires an event
+- but does not yet update History
+
+Once the High Priority items have been completed, this will be the next area to look at. 
+
+#### API parity
+
+To ensure parity to the APIs it mocks, the plan it to set up some kind of [Contract Tests](https://martinfowler.com/bliki/ContractTest.html) to compare the output of the source code against the real Chrome API. 
 
 ### Roadmap
 
-At this moment, Jest Chrome faker has partial implementations of some core APIs:
+The APIs have been prioritised as follows:
 
-- [likelylogic/jest-chrome-faker/tree/master/src/api](src/api)
-
-The rest of the APIs have been prioritised as follows:
-
-- [High Priority](https://github.com/likelylogic/jest-chrome-fake/issues?q=is%3Aopen+is%3Aissue+milestone%3A%22High+Priority%22)
+- [High Priority](https://github.com/likelylogic/jest-chrome-faker/milestones/High%20Priority)
 - [Low Priority](https://github.com/likelylogic/jest-chrome-fake/issues/1)
 
-Check individual [API issues](https://github.com/likelylogic/jest-chrome-faker/issues/8) to see notes, and what has been completed.
+Individual APIs are logged as [issues](https://github.com/likelylogic/jest-chrome-faker/issues/labels/API) where you can go to see:
 
-The plan is to work on completing the high priority items first, then reviewing which of the low priority items would be worth adding. As there are various non-testable APIs (for example, Tab Capture) it is likely that only a portion of the API will be fully faked.
+- progress on which properties, method and events have completed
+- documentation links
+- a [source](src/api) code link
+- any notes
 
-### API parity
-
-To ensure parity to the APIs it mocks, the plan it to set up some kind of [Contract Tests](https://martinfowler.com/bliki/ContractTest.html) to compare the output of the source code against the real Chrome API. 
+Note that as there are various non-testable APIs (for example, Tab Capture) it is likely that only a portion of the API will be fully faked.
 
 ## Contributing
 
