@@ -94,12 +94,12 @@ export function fakeStorage (data: Hash = {}, type: StorageAreaType = 'local') {
 
       // all keys
       if (keys === null) {
-        return this.get(Object.keys(db))
+        return this.get(Object.keys(db), done)
       }
 
       // string
       if (typeof keys === 'string') {
-        return this.get([keys])
+        return this.get([keys], done)
       }
 
       // array
@@ -108,7 +108,7 @@ export function fakeStorage (data: Hash = {}, type: StorageAreaType = 'local') {
           output[key] = undefined
           return output
         }, {})
-        return this.get(keys)
+        return this.get(keys, done)
       }
 
       // object
