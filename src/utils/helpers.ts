@@ -1,5 +1,4 @@
-import cloneFn from 'clone'
-import deepIs from 'deep-is'
+const cloneFn = require('clone')
 
 export function clone (value) {
   return cloneFn(value)
@@ -15,10 +14,6 @@ export function isObject (value: any): boolean {
 
 export function isPlainObject (value: any): boolean {
   return isObject(value) && !Array.isArray(value)
-}
-
-export function isEqual (src: any, trg: any) {
-  return deepIs(src, trg)
 }
 
 export function assign (target, source) {

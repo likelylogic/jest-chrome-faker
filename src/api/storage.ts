@@ -1,4 +1,4 @@
-import jsonSize from 'json-size'
+const jsonSize = require('json-size')
 import { isPlainObject, clone, resolve, isDefined } from '@utils/helpers'
 import { mock, mockEvent } from '@utils/chrome'
 
