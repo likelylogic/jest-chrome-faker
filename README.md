@@ -26,7 +26,7 @@ it('should search tabs', () => {
 
 Using fakes (or "[test doubles](https://martinfowler.com/bliki/TestDouble.html)") makes it simple to programatically test parts of your extension code which rely heavily on the Chrome API, in a test environment, at speed, using stub data.
 
-Known as Integration Tests, Martin Fowler [says](https://martinfowler.com/bliki/IntegrationTest.html#:~:text=it's%20likely%20to%20significantly%20improve%20your%20testing%20speed):
+Martin Fowler [says](https://martinfowler.com/bliki/IntegrationTest.html#:~:text=it's%20likely%20to%20significantly%20improve%20your%20testing%20speed):
 
 > [Integration Tests] are likely to significantly improve your testing speed, ease of use, and resiliency.
 >
