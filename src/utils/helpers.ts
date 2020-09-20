@@ -38,9 +38,8 @@ export function get (obj: any, path: string | string[]): any {
   }
 }
 
-export function resolve (done: Function | undefined, value?: any) {
+export function resolve (done: Function | undefined, ...values: any[]) {
   if (typeof done === 'function') {
-    return done(value)
+    return setTimeout(() => done(...values), 0)
   }
-  return Promise.resolve(value)
 }

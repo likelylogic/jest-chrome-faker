@@ -6,14 +6,10 @@ export function setChrome (value) {
   chrome = value
 }
 
-export function getChrome () {
-  return chrome
-}
-
-let _id = 0
+let $id = 0
 
 export function getId (id?: number | string): number | string {
-  return id || ++_id
+  return id || ++$id
 }
 
 export function getTime (seconds: number) {
