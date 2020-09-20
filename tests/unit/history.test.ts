@@ -3,7 +3,6 @@ import { fakeHistory } from '@/index'
 import { partial, linkedIn, google, msn } from '../helpers'
 
 describe('history', function () {
-  let reset: () => any
   const history = chrome.history
   const data = [
     linkedIn,
@@ -15,16 +14,16 @@ describe('history', function () {
   ]
 
   beforeAll(async function () {
-    reset = fakeHistory(data)
+    fakeHistory(data)
   })
 
-  it('should get all visits for a single URL', function () {
+  it('getVisits', function () {
     history.getVisits({ url: msn.url }, (visits) => {
       expect(visits.length).toEqual(4)
     })
   })
 
-  it('should get search info for empty text', function () {
+  it('search: with empty text', function () {
     history.search({ text: '' }, (items) => {
       expect(items).toEqual([
         partial({ url: linkedIn.url, visitCount: 1, lastVisitTime: 0 }),
@@ -34,7 +33,7 @@ describe('history', function () {
     })
   })
 
-  it('should get search info for text', function () {
+  it('search: with text', function () {
     history.search({ text: 'n' }, (items) => {
       expect(items).toEqual([
         partial({ url: linkedIn.url, visitCount: 1, lastVisitTime: 0 }),
@@ -43,19 +42,15 @@ describe('history', function () {
     })
   })
 
-  it('should get search results after startTime', function () {
+  it('search: after startTime', function () {
     history.search({ text: '', startTime: 4000 }, (items) => {
       expect(items.length).toEqual(1)
     })
   })
 
-  it('should get search results before endTime', function () {
+  it('search: before endTime', function () {
     history.search({ text: '', endTime: 4000 }, (items) => {
       expect(items.length).toEqual(2)
     })
-  })
-
-  afterAll(function () {
-    reset()
   })
 })

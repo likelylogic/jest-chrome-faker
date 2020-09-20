@@ -11,13 +11,13 @@ beforeAll(async function () {
 })
 
 describe('methods', function () {
-  it('should set data', function () {
+  it('set', function () {
     storage.set({ foo: 100 }, () => {
       expect(storage.set).toHaveBeenCalled()
     })
   })
 
-  it('should get data', function () {
+  it('get', function () {
     storage.get('foo', (value) => {
       expect(value).toStrictEqual({ foo: 100 })
     })
@@ -26,7 +26,7 @@ describe('methods', function () {
     })
   })
 
-  it('should remove data', function () {
+  it('remove', function () {
     storage.remove('bar', () => {
       storage.get('bar', (value) => {
         expect(value).toStrictEqual({ bar: undefined })
@@ -34,7 +34,7 @@ describe('methods', function () {
     })
   })
 
-  it('should clear data', function () {
+  it('clear', function () {
     storage.clear(() => {
       storage.get({}, (value) => {
         expect(value).toStrictEqual({})
@@ -42,7 +42,7 @@ describe('methods', function () {
     })
   })
 
-  it('should reset', function () {
+  it('reset', function () {
     reset()
     expect(storage.set).toHaveBeenCalledTimes(0)
     expect(storage.get).toHaveBeenCalledTimes(0)
@@ -63,7 +63,7 @@ describe('events', function () {
     onChanged.addListener(spy)
   })
 
-  it('should correctly report a set', async function () {
+  it('set', async function () {
     storage.set({ foo: 2, bar: 3 })
     expect(spy).toHaveBeenNthCalledWith(1, {
       foo: { oldValue: 1, newValue: 2 },
@@ -71,14 +71,14 @@ describe('events', function () {
     }, 'local')
   })
 
-  it('should correctly report a remove', async function () {
+  it('remove', async function () {
     storage.remove('foo')
     expect(spy).toHaveBeenNthCalledWith(2, {
       foo: { oldValue: 2 },
     }, 'local')
   })
 
-  it('should correctly report a clear', async function () {
+  it('clear', async function () {
     storage.clear()
     expect(spy).toHaveBeenNthCalledWith(3, {
       bar: { oldValue: 3 },
