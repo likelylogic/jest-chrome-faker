@@ -1,6 +1,6 @@
 import { chrome } from 'jest-chrome'
 import { isDefined, assign } from '@utils/helpers'
-import { getId, getTime, getTitle, mock} from '@utils/chrome'
+import { getId, getTime, getTitle, mock } from '@utils/chrome'
 
 // ---------------------------------------------------------------------------------------------------------------------
 // classes

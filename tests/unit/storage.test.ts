@@ -1,6 +1,6 @@
 import { chrome } from 'jest-chrome'
 import { fakeStorage } from '@/index'
-import { inspect } from '../helpers'
+// import { inspect } from '../helpers'
 
 let reset: () => any
 const storage = chrome.storage.local
@@ -50,8 +50,7 @@ describe('methods', function () {
 })
 
 describe('events', function () {
-
-  let reset: () => any
+  // let reset: () => any
   const storage = chrome.storage.local
   const data = { foo: 1 }
   let spy, onChanged
@@ -84,5 +83,4 @@ describe('events', function () {
       bar: { oldValue: 3 },
     }, 'local')
   })
-
 })

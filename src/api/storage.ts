@@ -1,6 +1,6 @@
-const jsonSize = require('json-size')
 import { isPlainObject, clone, resolve, isDefined } from '@utils/helpers'
 import { mock, mockEvent } from '@utils/chrome'
+const jsonSize = require('json-size')
 
 // ---------------------------------------------------------------------------------------------------------------------
 // classes
@@ -40,7 +40,7 @@ function makeDatabase (data) {
  */
 function makeChangeHandler (type: StorageAreaType, newStore: Hash) {
   let oldStore = []
-  let handler = mockEvent('storage')
+  const handler = mockEvent('storage')
 
   /**
    * Call this before modifying state to store the previous state
@@ -80,7 +80,6 @@ function makeChangeHandler (type: StorageAreaType, newStore: Hash) {
 // ---------------------------------------------------------------------------------------------------------------------
 
 export function fakeStorage (data: Hash = {}, type: StorageAreaType = 'local') {
-
   // database
   const db = makeDatabase(data)
 
