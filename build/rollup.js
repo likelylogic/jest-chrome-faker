@@ -1,4 +1,5 @@
 import path from 'path'
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import license from 'rollup-plugin-license'
 import ts from 'rollup-plugin-typescript2'
 import ttypescript from 'ttypescript'
@@ -25,6 +26,7 @@ function bundle (format) {
           },
         },
       }),
+      nodeResolve(),
       ts({
         typescript: ttypescript,
         cacheRoot: 'build/.rpt2_cache',
