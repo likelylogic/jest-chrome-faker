@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [0.3.2] - 2023-03-13
+
+Changed
+
+- Upgrade to Jest 26 and Jest Chrome 0.8.0
+
 ## [0.2.0] - 2019-09-16
 
 Added
