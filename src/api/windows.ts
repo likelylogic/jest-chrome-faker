@@ -1,5 +1,7 @@
 import { getId, mock } from '@utils/chrome'
 import { assign } from '@utils/helpers'
+import windowStateEnum = chrome.windows.windowStateEnum
+import windowTypeEnum = chrome.windows.windowTypeEnum
 
 // ---------------------------------------------------------------------------------------------------------------------
 // classes
@@ -10,8 +12,8 @@ export class Window implements chrome.windows.Window {
   alwaysOnTop = false
   incognito = false
   focused = false
-  state = 'normal'
-  type = 'normal'
+  state = 'normal' as windowStateEnum
+  type = 'normal' as windowTypeEnum
   left = 0
   top = 0
   width = 1920
@@ -35,12 +37,12 @@ export function fakeWindows (data: WindowData[] = []) {
 
   // mocked
   const mocked: any = {
-    get (id: number, info: chrome.windows.GetInfo, done: Function) {
+    get (id: number, info: chrome.windows.UpdateInfo, done: Function) {
       const window: Window | undefined = db.find(window => window.id === id)
       done(window)
     },
 
-    getAll (info: chrome.windows.GetInfo, done: Function) {
+    getAll (info: chrome.windows.UpdateInfo, done: Function) {
       done([...db])
     }
   }

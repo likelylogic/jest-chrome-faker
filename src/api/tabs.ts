@@ -1,7 +1,7 @@
 import { chrome } from 'jest-chrome'
-import { get } from '@likelylogic/collection-fns'
+import { get } from '@davestewart/collection-fns'
 import { getId, getTitle, mock, mockEvent } from '@utils/chrome'
-import { assign, resolve, clone } from '@utils/helpers'
+import { assign, resolve } from '@utils/helpers'
 
 // ---------------------------------------------------------------------------------------------------------------------
 // classes
@@ -11,6 +11,7 @@ import QueryInfo = chrome.tabs.QueryInfo
 
 export class Tab implements chrome.tabs.Tab {
   id = 0
+  groupId = -1
   windowId = 0
   active = false
   audible = false
@@ -48,8 +49,8 @@ function makeDatabase (data: TabData[] = []) {
   return data.map(data => new Tab(data))
 }
 
-function getFavIconUrl(url: string) {
-  const matches = url.match(/^(https?:\/\/(www\.)?[^\/]+)/)
+function getFavIconUrl (url: string) {
+  const matches = url.match(/^(https?:\/\/(www\.)?[^/]+)/)
   return matches
     ? matches[1] + '/favicon.ico'
     : ''

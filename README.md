@@ -3,7 +3,7 @@
 
 ## Abstract
 
-Jest Chrome Faker provides [working implementations](#implementations) of parts of the [Chrome API](https://developer.chrome.com/extensions/devguide) (Web Extensions) for use in [Jest](https://jestjs.io/docs/en/getting-started): 
+Jest Chrome Faker provides [working implementations](#implementations) of parts of the [Chrome API](https://developer.chrome.com/extensions/reference) (Web Extensions) for use in [Jest](https://jestjs.io/docs/en/getting-started): 
 
 ```js
 import { fakeTabs } from 'jest-chrome-faker'

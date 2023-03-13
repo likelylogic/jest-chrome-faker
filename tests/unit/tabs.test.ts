@@ -1,7 +1,7 @@
 import { chrome } from 'jest-chrome'
-import { fakeStorage, fakeTabs } from '@/index'
+import { fakeTabs } from '@/index'
 import { partial, linkedIn, google, msn } from '../helpers'
-import { Tabs } from 'jest-chrome/types/jest-chrome'
+// import { Tabs } from 'jest-chrome/types/jest-chrome'
 
 const tabs = chrome.tabs
 const data = [
@@ -58,7 +58,7 @@ describe('update', function () {
   })
 
   it('pinned', async function () {
-    let info = { pinned: true }
+    const info = { pinned: true }
     tabs.update(1, info, (tab: chrome.tabs.Tab | undefined) => {
       expect(tab!.pinned).toBe(info.pinned)
       expect(onUpdated).toHaveBeenLastCalledWith(1, info, partial(info))
@@ -66,7 +66,7 @@ describe('update', function () {
   })
 
   it('autoDiscardable', async function () {
-    let info = { autoDiscardable: true }
+    const info = { autoDiscardable: true }
     tabs.update(1, info, (tab: chrome.tabs.Tab | undefined) => {
       expect(tab!.autoDiscardable).toBe(info.autoDiscardable)
       expect(onUpdated).toHaveBeenLastCalledWith(1, info, partial(info))
@@ -74,7 +74,7 @@ describe('update', function () {
   })
 
   it('openerTabId', async function () {
-    let info = { openerTabId: 10 }
+    const info = { openerTabId: 10 }
     tabs.update(1, info, (tab: chrome.tabs.Tab | undefined) => {
       expect(tab!.openerTabId).toBe(info.openerTabId)
       expect(onUpdated).toHaveBeenLastCalledWith(1, info, partial(info))
@@ -82,14 +82,14 @@ describe('update', function () {
   })
 
   it('muted', async function () {
-    let info = { muted: true }
+    const info = { muted: true }
     tabs.update(1, info, (tab: chrome.tabs.Tab | undefined) => {
       expect(tab!.mutedInfo).toEqual(partial(info))
     })
   })
 
   it('url', async function () {
-    let info = { url: google.url }
+    const info = { url: google.url }
     tabs.update(1, info, (tab: chrome.tabs.Tab | undefined) => {
       expect(tab!.url).toEqual(info.url)
       expect(tab!.title).toEqual('Google Com')
@@ -98,19 +98,18 @@ describe('update', function () {
   })
 
   it('active', async function () {
-    let info = { active: true }
+    const info = { active: true }
     tabs.update(1, info, (tab: chrome.tabs.Tab | undefined) => {
       expect(tab!.active).toBe(true)
-      //expect(onActivated).toHaveBeenLastCalledWith(1, 0)
+      // expect(onActivated).toHaveBeenLastCalledWith(1, 0)
     })
   })
 
   it('highlighted', async function () {
-    let info = { highlighted: true }
+    const info = { highlighted: true }
     tabs.update(1, info, (tab: chrome.tabs.Tab | undefined) => {
       expect(tab!.highlighted).toBe(true)
       expect(onHighlighted).toHaveBeenLastCalledWith(1, info, [1])
     })
   })
-
 })
